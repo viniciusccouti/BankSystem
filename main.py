@@ -8,7 +8,7 @@ class ContaCorrente:
     def _data_hora():
         fuso_BR = pytz.timezone('Brazil/East')
         horario_BR = datetime.now(fuso_BR)
-        return horario_BR
+        return horario_BR.strftime('%d/%m/%Y %H:%M:%S')
 
     def __init__(self,nome,cpf, agencia,num_conta):
         self.nome = nome
@@ -41,6 +41,12 @@ class ContaCorrente:
     def consultar_limite_chequeespecial(self):
         print('Seu limite de chque especial é de {:,.2f}'.format(self._limite_conta()))
 
+    def consultar_historico_transacoes(self):
+        print('Histórico de Transações:')
+        print('Valor,Saldo,Data e Hora')
+        for transacao in self.transacoes:
+            print(transacao)
+
 
 #programa
 conta_Maguila = ContaCorrente("Maguila","035.687.877-99", 1234, 23456)
@@ -58,4 +64,4 @@ conta_Maguila.consultar_limite_chequeespecial()
 
 print('-'*20)
 
-print(conta_Maguila.transacoes)
+print(conta_Maguila.consultar_historico_transacoes())
