@@ -1,4 +1,14 @@
+from datetime import datetime
+import pytz
+
+
 class ContaCorrente:
+
+    @staticmethod
+    def _data_hora():
+        fuso_BR = pytz.timezone('Brazil/East')
+        horario_BR = datetime.now(fuso_BR)
+        return horario_BR
 
     def __init__(self,nome,cpf, agencia,num_conta):
         self.nome = nome
@@ -11,7 +21,8 @@ class ContaCorrente:
 
     def depositar(self, valor):
         self.saldo += valor
-        self.transacoes.append(valor, self.saldo, data e hora )
+        self.transacoes.append((valor, self.saldo,ContaCorrente._data_hora()))
+
     def consultar_saldo(self):
         print('Seu saldo atual é de R${:,.2f}'.format(self.saldo))
 
@@ -25,6 +36,7 @@ class ContaCorrente:
             self.consultar_saldo()
         else:
             self.saldo -= valor
+            self.transacoes.append((-valor, self.saldo, ContaCorrente._data_hora()))
 
     def consultar_limite_chequeespecial(self):
         print('Seu limite de chque especial é de {:,.2f}'.format(self._limite_conta()))
@@ -43,3 +55,7 @@ conta_Maguila.sacar_dinheiro(20900)
 print('Saldo Final')
 conta_Maguila.consultar_saldo()
 conta_Maguila.consultar_limite_chequeespecial()
+
+print('-'*20)
+
+print(conta_Maguila.transacoes)
