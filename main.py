@@ -3,7 +3,18 @@ import pytz
 
 
 class ContaCorrente:
+    """
+    Cria um objeto ContaCorrente para gerenciar as contas dos clientes.
 
+    Atributos:
+        nome(str): Nome do Cliente
+        cpf(str): CPF do Cliente
+        agencia: Agencia responsável pela conta do cliente
+        num_conta: Número da conta corrente do cliente
+        saldo: Saldo disponível na conta do Cliente
+        limite: Limite de Cheque especial daquele cliente
+        transacoes: Histórico de transações do Cliente
+    """
     @staticmethod
     def _data_hora():
         fuso_BR = pytz.timezone('Brazil/East')
@@ -11,32 +22,33 @@ class ContaCorrente:
         return horario_BR.strftime('%d/%m/%Y %H:%M:%S')
 
     def __init__(self,nome,cpf, agencia,num_conta):
-        self.nome = nome
-        self.cpf = cpf
-        self.saldo = 0
-        self.limite = None
-        self.agencia = agencia
-        self.num_conta = num_conta
-        self.transacoes = []
+        self._nome = nome
+        self._cpf = cpf
+        self._saldo = 0
+        self._limite = None
+        self._agencia = agencia
+        self._num_conta = num_conta
+        self._transacoes = []
+        self._cartoes = []
 
     def depositar(self, valor):
-        self.saldo += valor
-        self.transacoes.append((valor, self.saldo,ContaCorrente._data_hora()))
+        self._saldo += valor
+        self._transacoes.append((valor, self._saldo, ContaCorrente._data_hora()))
 
     def consultar_saldo(self):
-        print('Seu saldo atual é de R${:,.2f}'.format(self.saldo))
+        print('Seu saldo atual é de R${:,.2f}'.format(self._saldo))
 
     def _limite_conta(self):
-        self.limite = -1000
-        return self.limite
+        self._limite = -1000
+        return self._limite
 
     def sacar_dinheiro(self,valor):
-        if self.saldo - valor < self._limite_conta():
+        if self._saldo - valor < self._limite_conta():
             print('Você não tem saldo sufiiciente para sacar esse valor')
             self.consultar_saldo()
         else:
-            self.saldo -= valor
-            self.transacoes.append((-valor, self.saldo, ContaCorrente._data_hora()))
+            self._saldo -= valor
+            self._transacoes.append((-valor, self._saldo, ContaCorrente._data_hora()))
 
     def consultar_limite_chequeespecial(self):
         print('Seu limite de chque especial é de {:,.2f}'.format(self._limite_conta()))
@@ -44,39 +56,32 @@ class ContaCorrente:
     def consultar_historico_transacoes(self):
         print('Histórico de Transações:')
         print('Valor,Saldo,Data e Hora')
-        for transacao in self.transacoes:
+        for transacao in self._transacoes:
             print(transacao)
 
     def transferir(self, valor, conta_destino):
-        self.saldo -= valor
-        self.transacoes.append((-valor, self.saldo, ContaCorrente._data_hora()))
-        conta_destino.saldo += valor
-        conta_destino.transacoes.append((valor, self.saldo, ContaCorrente._data_hora()))
+        self._saldo -= valor
+        self._transacoes.append((-valor, self._saldo, ContaCorrente._data_hora()))
+        conta_destino._saldo += valor
+        conta_destino._transacoes.append((valor, self._saldo, ContaCorrente._data_hora()))
+
+
+class CartaoCredito:
+
+    def __init__(self,titular, conta_corrente):
+        self.numero = None
+        self.titular = titular
+        self.validade = None
+        self.cod_seguranca = None
+        self.limite = None
+        self.conta_corrente = conta_corrente
 
 
 
 #programa
 conta_Maguila = ContaCorrente("Maguila","035.687.877-99", 1234, 23456)
-conta_Maguila.consultar_saldo()
 
-#depositando dinheiro
-conta_Maguila.depositar(8000)
-conta_Maguila.consultar_saldo()
 
-print('Saldo Final')
-conta_Maguila.consultar_saldo()
-conta_Maguila.consultar_limite_chequeespecial()
+cartao_Maguila = CartaoCredito('Maguila', conta_Maguila)
 
-print('-'*20)
-
-print(conta_Maguila.consultar_historico_transacoes())
-print('-'*20)
-
-conta_Chokito = ContaCorrente('Chokito','1234232','3474','22345')
-conta_Maguila.transferir(1000,conta_Chokito)
-
-conta_Maguila.consultar_saldo()
-conta_Chokito.consultar_saldo()
-
-conta_Maguila.consultar_historico_transacoes()
-conta_Chokito.consultar_historico_transacoes()
+print(cartao_Maguila.conta_corrente._num_conta)
