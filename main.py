@@ -69,12 +69,13 @@ class ContaCorrente:
 class CartaoCredito:
 
     def __init__(self,titular, conta_corrente):
-        self.numero = None
+        self.numero = 1234
         self.titular = titular
         self.validade = None
         self.cod_seguranca = None
         self.limite = None
         self.conta_corrente = conta_corrente
+        conta_corrente._cartoes.append(self)
 
 
 
@@ -85,3 +86,5 @@ conta_Maguila = ContaCorrente("Maguila","035.687.877-99", 1234, 23456)
 cartao_Maguila = CartaoCredito('Maguila', conta_Maguila)
 
 print(cartao_Maguila.conta_corrente._num_conta)
+
+print(conta_Maguila._cartoes[0].numero)
