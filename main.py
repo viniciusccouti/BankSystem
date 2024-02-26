@@ -1,6 +1,6 @@
 from datetime import datetime
 import pytz
-
+from random import randint
 
 class ContaCorrente:
     """
@@ -29,7 +29,7 @@ class ContaCorrente:
         self._agencia = agencia
         self._num_conta = num_conta
         self._transacoes = []
-        self._cartoes = []
+        self.cartoes = []
 
     def depositar(self, valor):
         self._saldo += valor
@@ -68,14 +68,20 @@ class ContaCorrente:
 
 class CartaoCredito:
 
+    @staticmethod
+    def _data_hora():
+        fuso_BR = pytz.timezone('Brazil/East')
+        horario_BR = datetime.now(fuso_BR)
+        return horario_BR
+
     def __init__(self,titular, conta_corrente):
-        self.numero = 1234
+        self.numero = randint(1000000000000000, 9999999999999999)
         self.titular = titular
-        self.validade = None
-        self.cod_seguranca = None
-        self.limite = None
+        self.validade = '{}/{}'.format(CartaoCredito._data_hora().month, CartaoCredito._data_hora().year + 4)
+        self.cod_seguranca = '{}{}{}'.format(randint(0,9),randint(0,9),randint(0,9))
+        self.limite = 1000
         self.conta_corrente = conta_corrente
-        conta_corrente._cartoes.append(self)
+        conta_corrente.cartoes.append(self)
 
 
 
@@ -87,4 +93,8 @@ cartao_Maguila = CartaoCredito('Maguila', conta_Maguila)
 
 print(cartao_Maguila.conta_corrente._num_conta)
 
-print(conta_Maguila._cartoes[0].numero)
+print(conta_Maguila.cartoes[0].numero)
+
+print(cartao_Maguila.validade)
+print(cartao_Maguila.numero)
+print(cartao_Maguila.cod_seguranca)
