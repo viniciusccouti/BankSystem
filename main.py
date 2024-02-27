@@ -22,12 +22,13 @@ class ContaCorrente:
         return horario_BR.strftime('%d/%m/%Y %H:%M:%S')
 
     def __init__(self,nome,cpf, agencia,num_conta):
-        self._nome = nome
+        self.nome = nome
         self._cpf = cpf
         self._saldo = 0
         self._limite = None
-        self._agencia = agencia
-        self._num_conta = num_conta
+        self._senha = '1234'
+        self.agencia = agencia
+        self.num_conta = num_conta
         self._transacoes = []
         self.cartoes = []
 
@@ -80,9 +81,20 @@ class CartaoCredito:
         self.validade = '{}/{}'.format(CartaoCredito._data_hora().month, CartaoCredito._data_hora().year + 4)
         self.cod_seguranca = '{}{}{}'.format(randint(0,9),randint(0,9),randint(0,9))
         self.limite = 1000
+        self._senha = '1234'
         self.conta_corrente = conta_corrente
         conta_corrente.cartoes.append(self)
 
+    @property
+    def senha(self):
+        return self._senha
+
+    @senha.setter
+    def senha(self, valor):
+        if len(valor) == 4 and valor.isnumeric():
+            self._senha = valor
+        else:
+            print("Nova Senha Inválida")
 
 
 #programa
@@ -91,10 +103,8 @@ conta_Maguila = ContaCorrente("Maguila","035.687.877-99", 1234, 23456)
 
 cartao_Maguila = CartaoCredito('Maguila', conta_Maguila)
 
-print(cartao_Maguila.conta_corrente._num_conta)
+conta_Maguila.name = "Maguila o Gorila"
+print(conta_Maguila.name)
 
-print(conta_Maguila.cartoes[0].numero)
-
-print(cartao_Maguila.validade)
-print(cartao_Maguila.numero)
-print(cartao_Maguila.cod_seguranca)
+cartao_Maguila.senha = '2345'
+print(cartao_Maguila.senha)
